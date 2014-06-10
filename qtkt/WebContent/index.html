@@ -1,0 +1,67 @@
+<html lang="en" ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Q-Tkt</title>
+  <!--
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <!--  <link rel="stylesheet" type="text/css" href="css/flat-ui.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/app.css" >
+    <link rel="shortcut icon" href="img/favicon.png">
+
+  	<script src="lib/jquery/jquery-1.10.2.js"></script>
+    <script src="lib/jquery/jquery.cookie.js"></script>
+    <script src="lib/angular/angular.js"></script>
+  	<script src="lib/angular/angular-route.js"></script>
+    <script src="lib/angular/angular-cookies.js"></script>
+
+	  <script src="js/app.js" type="text/javascript"></script>
+    <script src="js/controllers.js" type="text/javascript"></script>
+
+</head>
+
+<body ng-controller='MainController'>
+    <div class='well' id='head'>
+      <div class='col-sm-offset-1 left'>
+        <a href="http://localhost:8080/qtkt/"><img src="img/qtkt.png" /></a>
+      </div>
+      <div class='col-sm-offset-10' ng-show='!show()'>
+        <p>You are not logged In....</p>
+        <a href="http://localhost:8080/qtkt/#login"><button class="btn btn-large btn-primary" >Login</button></a>
+      </div>
+      <div class='col-sm-offset-10' ng-show='show()'>
+        <p>Welcome {{ showvalue }}</p>
+        <button class="btn btn-large btn-primary" ng-click="logout()">Logout</button>
+      </div>
+    </div>
+    <div id='body'>
+      <div class='well'>
+        <table class='table'>
+          <tbody>
+            <tr>
+              <th>
+                  <a href="http://localhost:8080/qtkt/#booking"><img src="img/menu/b.png" /></a>
+              </th>
+              <th>
+                  <a href="http://localhost:8080/qtkt/#inquiry"><img src="img/menu/t.png" /></a>
+              </th>
+              <th>
+                  <a href="http://localhost:8080/qtkt/#cancel"><img src="img/menu/c.png" /></a>
+              </th>
+            </tr>
+          </tbody>
+        </table>  
+      </div>
+      
+      <div class='alert alert-danger' ng-show="flash">
+          {{ flash }}
+      </div>
+      <div class='well' id='loadhere' ng-view><!--id='loadhere'--></div>
+    </div>
+<!--
+    <div id='foot'>
+      <h1>Foot</h1>
+    </div> 
+-->   
+</body>
+</html>

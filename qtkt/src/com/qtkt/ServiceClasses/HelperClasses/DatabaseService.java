@@ -24,6 +24,7 @@ public class DatabaseService {
 		} catch (Exception e) {
 			System.out.println("Exception " + e);
 			System.exit(-1);// System.exit("Exception " + e);
+			// Change Made
 		}
 	}
 

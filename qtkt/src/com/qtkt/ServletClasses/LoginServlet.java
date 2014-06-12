@@ -73,8 +73,8 @@ public class LoginServlet extends HttpServlet {
 
 		LoginService ls = new LoginService();
 		if (ls.checkAuthentication(user.toLowerCase(), pass)) {
-			// Cookie cookie= ls.setCookie("q_user", user);
-			// response.addCookie(cookie);
+			Cookie cookie= ls.setCookie("q_user", user);
+			response.addCookie(cookie);
 
 			response.setContentType("text/html");
 			// PrintWriter out = response.getWriter();

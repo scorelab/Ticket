@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+//import org.json.simple.JSONObject;
 
 import com.qtkt.ServiceClasses.HelperClasses.DatabaseService;
 
@@ -15,12 +15,13 @@ public class GetFromToTrainTime {
 	private DatabaseService dbs;
 	private ResultSet rs;
 	private JSONArray jarray;
-	private JSONObject jobj;
+	//private JSONObject jobj;
 
 	public GetFromToTrainTime() {
 		dbs = new DatabaseService();
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONArray getFrom() {
 		jarray = new JSONArray();
 		String query = "SELECT * FROM fromstation";
@@ -48,6 +49,7 @@ public class GetFromToTrainTime {
 		return dateformat.format(date);
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONArray getTo(String value) {
 		String query = "SELECT tostation FROM fromstation INNER JOIN fromto ON fromstation.sid=fromto.fromid WHERE fromstation.fstationname='"
 				+ value + "'";

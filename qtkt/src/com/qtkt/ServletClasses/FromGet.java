@@ -66,7 +66,7 @@ public class FromGet extends HttpServlet {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println(sb.toString());
+		//System.out.println(sb.toString());
 
 		id = Integer.parseInt((String) jobj.get("id"));
 		response.setContentType("text/html");

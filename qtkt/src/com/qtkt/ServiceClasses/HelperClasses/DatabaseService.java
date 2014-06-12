@@ -2,9 +2,11 @@ package com.qtkt.ServiceClasses.HelperClasses;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Statement; 
+import java.util.ArrayList;
 
 /*
  * Database Name qtkt 
@@ -14,6 +16,7 @@ import java.sql.Statement;
 public class DatabaseService {
 	private Connection con;
 	private Statement st;
+	private PreparedStatement ps;
 	private ResultSet rs;
 
 	public DatabaseService() {
@@ -39,11 +42,31 @@ public class DatabaseService {
 		return rs;
 	}
 
+	public ResultSet getResultForLoginQuery(String query,
+			ArrayList<Object> parameters) {
+		rs = null;
+		try {
+			// st = con.createStatement();
+			// rs = st.executeQuery(query);
+			ps = con.prepareStatement(query);
+			ps.setString(1, (String) parameters.get(0));
+			ps.setString(2, (String) parameters.get(1));
+			rs = ps.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
 	public void closeConnection() {
 		try {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Connection getCon() {
+		return con;
 	}
 }

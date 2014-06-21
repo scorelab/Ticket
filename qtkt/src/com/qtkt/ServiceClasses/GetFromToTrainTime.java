@@ -15,7 +15,8 @@ public class GetFromToTrainTime {
 	private DatabaseService dbs;
 	private ResultSet rs;
 	private JSONArray jarray;
-	//private JSONObject jobj;
+
+	// private JSONObject jobj;
 
 	public GetFromToTrainTime() {
 		dbs = new DatabaseService();
@@ -67,6 +68,72 @@ public class GetFromToTrainTime {
 		}
 
 		return jarray;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONArray getTrainandTime(String from, String to) {
+		String query = "SELECT traindetails.tname,traindetails.ttime FROM trainfortravel INNER JOIN traindetails ON trainfortravel.tno=traindetails.tno WHERE trainfortravel.sfrom = '"
+				+ from + "' AND trainfortravel.sto = '" + to + "'";
+		jarray = new JSONArray();
+		rs = dbs.getResultForQuery(query);
+
+		int i = 0;
+		try {
+			while (rs.next()) {
+				jarray.add(i, rs.getString(1) + " " + rs.getString(2));
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return jarray;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONArray getClass(String train) {
+		String values[];
+		values = train.split(" ");
+		String query = "SELECT classfortrain.cname FROM classfortrain INNER JOIN traindetails ON classfortrain.tno=traindetails.tno WHERE traindetails.tname='"
+				+ values[0] + "'";
+		jarray = new JSONArray();
+		rs = dbs.getResultForQuery(query);
+
+		int i = 0;
+		try {
+			while (rs.next()) {
+				jarray.add(i, rs.getString(1));
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return jarray;
+	}
+
+	// @SuppressWarnings("unchecked")
+	public Boolean checkSeatAvailability(long seats, String date, String tc) {
+		boolean availability = false;
+		int fseats;
+		String query = "SELECT fseats FROM " + tc + " WHERE bdate='" + date
+				+ "'";
+		// jarray = new JSONArray();
+		rs = dbs.getResultForQuery(query);
+
+		// int i = 0;
+		try {
+			if (rs.next()) {
+				fseats = rs.getInt(1);
+				if (seats <= fseats)
+					availability = true;
+				// jarray.add(i, rs.getInt(1));
+				// i++;
+			} else {
+				System.out.println("Not Available");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return availability;
 	}
 
 	public void close() {

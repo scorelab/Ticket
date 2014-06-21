@@ -1,6 +1,6 @@
 <div class="row-fluid col-sm-offset-1">
-    <div ng-show='!nextstatus'>
-    <form class="form-horizontal" role="form" name="addbooking" ng-submit="booking()">
+    <div ng-show='next==1'>
+        <form class="form-horizontal" role="form" name="addbooking" ng-submit="checkBooking()">
             <div class="form-group">
                 <label class="col-xs-11 label label-default">Book/Reserve</label>
             </div>
@@ -8,7 +8,7 @@
                 <label class='col-sm-2 label label-info' for="journey date"><h5>Journey Date</h5></label>
 
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" placeholder='Journey Date' name="journeydate" min={{mindate}} ng-model="bookcredentials.journeydate" ng-change="getFrom()" required />
+                    <input type="date" class="form-control" placeholder='mm/dd/yyyy' name="journeydate" min={{mindate}} ng-model="bookcredentials.journeydate" ng-change="getFrom()" required />
                 </div>
                 <label class='col-sm-offset-1 col-sm-2 label label-info' for="nic"><h5>NIC # </h5></label>
 
@@ -45,7 +45,7 @@
                 <label class="col-sm-offset-1 col-sm-2 label label-info" for="destination"><h5>Destination</h5></label>
 
                 <div class="col-sm-3">
-                    <select class="form-control" name="destination" ng-model='bookcredentials.selectedTo' required>
+                    <select class="form-control" name="destination" ng-model='bookcredentials.selectedTo' ng-change="getTrainandTime()" required>
                         <option value="" disabled selected>Destination</option>
                         <option ng-repeat="tolabel in tovalue">{{tolabel}}</option>
                     </select>
@@ -54,17 +54,32 @@
             </div>
             <br>
             <div class="row">
-                <label class='col-sm-2 label label-info' for="Jurney Time"><h5>Journey Time</h5></label>
+                <label class='col-sm-2 label label-info' for="trainandtime"><h5>Train and Time</h5></label>
 
                 <div class="col-sm-3">
-                    <input type="time" class="form-control" placeholder='Journey Time' name="journeytime" ng-model="bookcredentials.journeytime" required />
+                    <select class="form-control" name="trainandtime" ng-model='bookcredentials.trainTime' ng-change="getClass()" required>
+                        <option value="" disabled selected>Train and Time</option>
+                        <option ng-repeat="ttlabel in trainvalue">{{ttlabel}}</option>
+                    </select>
                 </div>
-                <label class="col-sm-offset-1 col-sm-2 label label-info" for="numberOfTickets"><h5>Number of Tickets </h5></label>
+                <lable class='col-sm-offset-1 col-sm-2 label label-info' for="class"><h5>Class</h5></lable>
 
                 <div class="col-sm-3">
-                    <input type="number" class="form-control" name="numberOftickets" min="1" placeholder='Number of Tickets' ng-model="bookcredentials.numberOftickets" required />
+                    <select class="form-control" name="class" ng-model='bookcredentials.selectedClass' required>
+                        <option value="" disabled selected>Select Class</option>
+                        <option ng-repeat="clabel in classvalue">{{clabel}}</option>
+                    </select>
                 </div>
-            </div><!--
+            </div>
+            <br>
+            <div class="row">
+                <label class="col-sm-2 label label-info" for="numberOfTickets"><h5>Number of Tickets</h5></label>
+
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" name="numberOftickets" min="1" placeholder='Number of Tickets' ng-model="bookcredentials.seats" required />
+                </div>
+            </div>
+            <!--
             <div class="form-group">
                 <div class="controls">
                     <a name="saveBtn" ng-click="addNewEvent()" ng-disabled="addBooking.$invalid" class="btn btn-large btn-primary" >Save</a>
@@ -74,67 +89,54 @@
         -->
             <br>
             <div class='form-group'>
-                <button class="col-xs-offset-8 col-xs-3 btn btn-large btn-primary" type='submit'>Next &gt;&gt;</button>
+                <button class="col-xs-offset-8 col-xs-3 btn btn-large btn-primary" type='submit' >Check Availability &gt;&gt;</button>
             </div>
-    </form>
+        </form>
     </div>
-    <div ng-show='nextstatus'>
-        <form class="form-horizontal" role="form" name="payMoney" ng-submit="paymoney()">
-            <div class="form-group">
-                <label class="col-xs-11 label label-default">Book/Reserve</label>
-            </div>
-            <div class='row'>
-                <label class='col-sm-2 label label-info' for="ticket number"><h5>Ticket Number</h5></label>
-                <label class='col-sm-3 label label-info' for="ticket number"><h5>2891-0893-1389-3845</h5></label>
+    <div ng-show='next==2'>
+        <!--<form class="form-horizontal" role="form" name="payMoney" ng-submit="paymoney()">-->
 
-                
-                <label class='col-sm-offset-1 col-sm-2 label label-info' for="journey date"><h5>Journey Date</h5></label>
-                <label class='col-sm-3 label label-info' for="journey date"><h5>05/14/2014</h5></label>
-            </div>
-            <br>
-            <div class='row'>
-                <label class='col-sm-2 label label-info' for="seat numbers"><h5>Seat Numbers</h5></label>
-                <label class='col-sm-3 label label-info' for="seat numbers"><h5>20, 21, 22</h5></label>
-                
-                <label class='col-sm-offset-1 col-sm-2 label label-info' for="nic"><h5>NIC # </h5></label>
-                <label class='col-sm-3 label label-info' for="nic"><h5>903240476V</h5></label>
-            </div>
-            <br>
-            <div class="row">
-                <label class="col-sm-2 label label-info" for="contactPhone"><h5>Contact Phone </h5></label>
-                <label class="col-sm-3 label label-info" for="contactPhone"><h5>0777328402</h5></label>
+        <div class="form-group">
+            <label class="col-xs-11 label label-default">Book/Reserve</label>
+        </div>
+        <div class='row'>
+            <label class='col-sm-2 label label-info' for="journey date"><h5>Journey Date</h5></label>
+            <label class='col-sm-3 label label-info' for="journey date"><h5>{{bookcredentials.journeydate}}</h5></label>
 
-                <label class="col-sm-offset-1 col-sm-2 label label-info" for="contactEmail"><h5>Contact Email </h5></label>
-                <label class="col-sm-3 label label-info" for="contactEmail"><h5>example@gmail.com</h5></label>
-            </div>
-            <br>
-            <div class="row">
-                <label class="col-sm-2 label label-info" for="from"><h5>From</h5></label>
-                <label class="col-sm-3 label label-info" for="from"><h5>Colombo</h5></label>
+            <label class='col-sm-offset-1 col-sm-2 label label-info' for="nic"><h5>NIC # </h5></label>
+            <label class='col-sm-3 label label-info' for="nic"><h5>{{bookcredentials.nic}}</h5></label>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-2 label label-info" for="contactPhone"><h5>Contact Phone</h5></label>
+            <label class="col-sm-3 label label-info" for="contactPhone"><h5>{{bookcredentials.contactphone}}</h5></label>
 
-                <label class="col-sm-offset-1 col-sm-2 label label-info" for="destination"><h5>Destination</h5></label>
-                <label class="col-sm-3 label label-info" for="destination"><h5>Vavuniya</h5></label>
-            </div>
-            <br>
-            <div class="row">
-                <label class='col-sm-2 label label-info' for="Jurney Time"><h5>Journey Time</h5></label>
-                <label class='col-sm-3 label label-info' for="Jurney Time"><h5>06:50 AM</h5></label>
+            <label class="col-sm-offset-1 col-sm-2 label label-info" for="contactEmail"><h5>Contact Email</h5></label>
+            <label class="col-sm-3 label label-info" for="contactEmail"><h5>{{bookcredentials.contactEmail}}</h5></label>
+        </div>
+        <br>
+        <div class="row">
+            <label class="col-sm-2 label label-info" for="from"><h5>From</h5></label>
+            <label class="col-sm-3 label label-info" for="from"><h5>{{bookcredentials.selectedFrom}}</h5></label>
 
-                <label class="col-sm-offset-1 col-sm-2 label label-info" for="numberOfTickets"><h5>Number of Tickets </h5></label>
-                <label class="col-sm-3 label label-info" for="numberOfTickets"><h5>3</h5></label>
-            </div>
-            <br>
-            <div class="row">
-                <label class='col-sm-2 label label-info' for="Book"><h5>Book</h5></label>
-                <div class="col-sm-1">
-                    <input  type='radio' class='form-control' ng-model='mood' value='Book' />
-                </div>
+            <label class="col-sm-offset-1 col-sm-2 label label-info" for="destination"><h5>Destination</h5></label>
+            <label class="col-sm-3 label label-info" for="destination"><h5>{{bookcredentials.selectedTo}}</h5></label>
+        </div>
+        <br>
+        <div class="row">
+            <label class='col-sm-2 label label-info' for="trainandtime"><h5>Train and Time</h5></label>
+            <label class='col-sm-3 label label-info' for="trainandtime"><h5>{{bookcredentials.trainTime}}</h5></label>
 
-                <label class='col-sm-offset-3 col-sm-2 label label-info' for="Reserve"><h5>Reserve</h5></label>
-                <div class="col-sm-1">
-                    <input type='radio' class='form-control' ng-model='mood' value='Reserve' />
-                </div>                
-            </div>
+            <label class="col-sm-offset-1 col-sm-2 label label-info" for="class"><h5>Class</h5></label>
+            <label class="col-sm-3 label label-info" for="class"><h5>{{bookcredentials.selectedClass}}</h5></label>
+        </div>
+        <br>
+        <div class="row">
+            <label class='col-sm-2 label label-info' for="seats"><h5>Number of Seats</h5></label>
+            <label class='col-sm-3 label label-info' for="trainandtime"><h5>{{bookcredentials.seats}}</h5></label>
+
+            <button class="col-sm-offset-4 col-sm-2 btn btn-large btn-primary" ng-click="reserve()" >Reserve</button>
+        </div>
         <!--
             <div class="form-group">
                 <div class="controls">
@@ -143,19 +145,34 @@
                 </div>
             </div>
         -->
-            <br>
-            <div class='row' ng-show = 'mood==="Book"'>
-                <label class='col-sm-offset-2 col-sm-3 label label-info' for="nic"><h5>Credit/Visa Card Number</h5></label>
+        <br>
+        <form class="form-horizontal" role="form" name="paymentform" ng-submit="payment()">
+            <div class="row">
+                <label class=' col-sm-3 label label-info' for="nic"><h5>Credit/Visa Card Number</h5></label>
 
-                <div class="col-sm-4 right-inner-addon">
-                    <input type="number" class="form-control" placeholder='Payment Card Number' name="pcn" min="1" required />
+                <div class="col-sm-4">
+                    <input type="number" class="form-control" placeholder='Payment Card Number' name="pcn" min="1" required/>
                 </div>
+
+                <button class="col-sm-offset-2 col-sm-2 btn btn-large btn-primary" type="submit" >Book</button>
             </div>
-            <br>           
+            <!--                           
             <div class='form-group'>
                 <button class="col-xs-3 btn btn-large btn-danger">Back</button>
                 <button class="col-xs-offset-5 col-xs-3 btn btn-large btn-primary" type='submit'>{{ mood }}</button>
             </div>
-    </form>
+        -->
+        </form>
+        <div class="row">
+            <button class="col-sm-2 btn btn-large btn-danger" ng-click="back()">Back</button>
+        </div>
+    </div>
+    <div ng-show="next==3">
+        <div class="form-group">
+            <label class="col-xs-11 label label-default">Book/Reserve</label>
+        </div>
+        <br>
+        <br>
+        <p>Seat Numbers: {{rcre.seatNumbers}}</p>
     </div>
 </div>

@@ -22,7 +22,9 @@ app.controller('LoginController', function($scope, AuthenticationService){
 });
 
 app.controller('BookingController', function($scope,$http,getdatemin,FormErrorService){
-	$scope.bookcredentials = {id:"", journeydate:"", nic:"", contactphone:"", contactEmail:"", selectedFrom:"", selectedTo:""};
+	$scope.bookcredentials = {id:"", journeydate:"", nic:"", contactphone:"", contactEmail:"", selectedFrom:"", selectedTo:"", trainTime:"", selectedClass:"", seats:""};
+	$scope.next=1;
+	$scope.rcre={};
 
 	$scope.bookcredentials.id="0";
 	$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data,status,headers,config){
@@ -49,13 +51,58 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 		});
 	}
 
-	$scope.booking = function() {
-		alert('Im in ');
+	$scope.getTrainandTime = function(){
+		$scope.bookcredentials.id="3";
+		$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data,status,headers,config){
+			$scope.trainvalue = data;
+		}).error(function(data,status,headers,config){
+			alert("Server Error ",status);
+		});
+	}
+
+	$scope.getClass = function() {
+		$scope.bookcredentials.id="4";
+		$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data,status,headers,config){
+			$scope.classvalue = data;
+		}).error(function(data,status,headers,config){
+			alert("Server Error ",status);
+		});
+	}
+
+	$scope.checkBooking = function() {
 		var status = FormErrorService.checkerror($scope.addbooking);
 		if(status){
-			$scope.nextstatus = 'success';
+			$scope.bookcredentials.id="5";
+			$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data) {
+				if(data == 'true') {
+					$scope.next = 2;				
+				} else if(data == 'false'){
+					$scope.next = 1;
+					FormErrorService.displayerror("Required Seats are not Available");
+				}
+			}).error(function(data){
+				alert("Server Error "+status);
+			});
 		}
-	};
+	}
+
+	$scope.payment = function() {
+		alert("payment");
+	}
+
+	$scope.reserve = function() {
+		$scope.next = 3;
+		$scope.bookcredentials.id="6";
+		$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data) {
+			$scope.rcre = data;
+		}).error(function(data){
+			alert("Server Error "+status);
+		});
+	}
+
+	$scope.back = function() {
+		$scope.next = 1;//!$scope.next;
+	}
 });
 
 app.controller('CancelController', function(){

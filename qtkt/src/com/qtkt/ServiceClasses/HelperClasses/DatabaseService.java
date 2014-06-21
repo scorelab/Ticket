@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement; 
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /*
@@ -57,6 +57,16 @@ public class DatabaseService {
 			e.printStackTrace();
 		}
 		return rs;
+	}
+
+	public void updateQuery(String query) {
+		rs = null;
+		try {
+			st = con.createStatement();
+			st.execute(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void closeConnection() {

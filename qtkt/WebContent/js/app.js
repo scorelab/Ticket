@@ -71,8 +71,11 @@ app.factory('AuthenticationService', function($http, $location, SessionService, 
 			$http.post('http://localhost:8080/qtkt/auth/login',credentials).success(function(data,status,headers,config){
 				CacheAndUncache.cacheSession(data);
 				FlashService.clear();
+				if (data == '') {
+					FlashService.show('Username or Password is wrong');
+				}else{
 				$location.path('/');
-				alert('success'+ data);
+				}
 			}).error(function(data){
 				alert('fail');
 			});
@@ -118,7 +121,7 @@ app.factory('getdatemin', function($http){
 
 app.factory('FormErrorService', function(FlashService){
 	return {
-		checkerror: function(form){
+		checkerror: function(form) {
 			if(form.$valid){
 				FlashService.clear();
 				return true;
@@ -127,6 +130,9 @@ app.factory('FormErrorService', function(FlashService){
 				FlashService.show('Check NIC Value');
 				return false;
 			}
+		},
+		displayerror: function(message) {
+			FlashService.show(message);
 		}
 	};
 });

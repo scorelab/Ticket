@@ -133,6 +133,22 @@ app.factory('FormErrorService', function(FlashService){
 		},
 		displayerror: function(message) {
 			FlashService.show(message);
+		},
+		clearerror: function() {
+			FlashService.clear();
+		}
+	};
+});
+
+app.factory('PrintService', function(){
+	return {
+		print: function(div) {
+			var printContents = document.getElementById(div).innerHTML;
+			var originalContent = document.body.innerHTML;
+			
+			document.body.innerHTML = printContents;
+			window.print();
+			document.body.innerHTML = originalContent;
 		}
 	};
 });

@@ -21,10 +21,11 @@ app.controller('LoginController', function($scope, AuthenticationService){
 	};
 });
 
-app.controller('BookingController', function($scope,$http,getdatemin,FormErrorService){
+app.controller('BookingController', function($scope,$http,getdatemin,FormErrorService,PrintService){
 	$scope.bookcredentials = {id:"", journeydate:"", nic:"", contactphone:"", contactEmail:"", selectedFrom:"", selectedTo:"", trainTime:"", selectedClass:"", seats:""};
 	$scope.next=1;
 	$scope.rcre={};
+	$scope.im={};
 
 	$scope.bookcredentials.id="0";
 	$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data,status,headers,config){
@@ -89,20 +90,45 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 	$scope.payment = function() {
 		alert("payment");
 	}
-
 	$scope.reserve = function() {
-		$scope.next = 3;
-		$scope.bookcredentials.id="6";
-		$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data) {
-			$scope.rcre = data;
-		}).error(function(data){
-			alert("Server Error "+status);
-		});
+		var r = confirm("Press a button");
+		if (r == true) {
+    		$scope.bookcredentials.id="6";
+			$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data) {
+				$scope.rcre = data;
+				if ($scope.rcre.status == 0) {
+					FormErrorService.displayerror('You cannot Reserve a Ticket within 2 Days From the Journey Date');
+				} else if($scope.rcre.status == 1) {
+					FormErrorService.displayerror('Sorry Your Reserve Request is Currently Unavilable');
+				} else if ($scope.rcre.status == 2){
+					FormErrorService.clearerror();
+					$scope.next = 3;
+				};
+			}).error(function(data){
+				alert("Server Error "+status);
+			});
+		} else {
+   			x = "You pressed Cancel!";
+		}
 	}
 
 	$scope.back = function() {
 		$scope.next = 1;//!$scope.next;
 	}
+
+	$scope.printdiv = function() {
+		/*
+		$http.get('http://localhost:8080/qtkt/qr').success(function(data) {
+			$scope.im = data;
+		}).error(function(data){
+			alert("Server Error "+status);
+		});
+*/
+		PrintService.print('printthis');
+	}
+	window.onbeforeunload = function() {
+  		return "Data will be lost if you leave the page, are you sure?";
+	};
 });
 
 app.controller('CancelController', function(){

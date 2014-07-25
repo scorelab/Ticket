@@ -7,7 +7,7 @@ import net.glxn.qrgen.image.ImageType;
 
 public class QrCodeService {
 
-	String qrtext = "Hello QR";
+	String qrtext = "www.google.com";
 	ByteArrayOutputStream out;
 
 	public ByteArrayOutputStream QrGeneration() {

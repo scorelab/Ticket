@@ -94,6 +94,7 @@ public class FromGet extends HttpServlet {
 			jarray = gfttt.getClass((String) jobj.get("trainTime"));
 			pw.print(jarray);
 		} else if (id == 5) {
+
 			boolean availability;
 			String value, values[];
 			value = (String) jobj.get("trainTime");
@@ -101,17 +102,27 @@ public class FromGet extends HttpServlet {
 			availability = gfttt.checkSeatAvailability(
 					(long) jobj.get("seats"), (String) jobj.get("journeydate"),
 					values[0] + "_" + jobj.get("selectedClass"));
+
 			pw.print(availability);
 		} else if (id == 6) {
 			String value, values[];
 			value = (String) jobj.get("trainTime");
 			values = value.split(" ");
-			if (gfttt.checkSeatAvailability((long) jobj.get("seats"),
+			if (gfttt.availableDay((String) jobj.get("journeydate") + " "
+					+ values[1] + " " + values[2]) <= 1.0) {
+				rjobj = new JSONObject();
+				rjobj.put("status", 0);
+				pw.print(rjobj);
+			} else if (gfttt.checkSeatAvailability((long) jobj.get("seats"),
 					(String) jobj.get("journeydate"),
 					values[0] + "_" + jobj.get("selectedClass"))) {
 
 				rjobj = new JSONObject();
 				rjobj = rs.reserveIt(jobj);
+				pw.print(rjobj);
+			} else {
+				rjobj = new JSONObject();
+				rjobj.put("status", 1);
 				pw.print(rjobj);
 			}
 		}

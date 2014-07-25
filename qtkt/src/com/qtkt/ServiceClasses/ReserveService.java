@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import org.json.simple.JSONObject;
 
+import com.qtkt.ServiceClasses.HelperClasses.AccessoryService;
 import com.qtkt.ServiceClasses.HelperClasses.DatabaseService;
 
 public class ReserveService {
@@ -21,7 +22,6 @@ public class ReserveService {
 
 	@SuppressWarnings("unchecked")
 	public JSONObject reserveIt(JSONObject cr) {
-		jobj = new JSONObject();
 		jobj = cr;
 		String value, values[];
 		value = (String) jobj.get("trainTime");
@@ -31,8 +31,8 @@ public class ReserveService {
 				values[0] + "_" + jobj.get("selectedClass"));
 
 		jobj.put("seatNumbers", snos);
-		// jobj.put("key2", "value2");
-		return jobj;
+		jobj.put("status", 2);
+		return updateTicket(jobj);
 	}
 
 	private String reserve(long seats, String date, String tbl) {
@@ -65,5 +65,31 @@ public class ReserveService {
 		}
 
 		return value;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject updateTicket(JSONObject jobj) {
+		int ticketno = AccessoryService.generateRandomNumber();
+		String query = "SELECT * FROM ticketdetails WHERE ticketno = "
+				+ ticketno;
+		rs = dbs.getResultForQuery(query);
+		while (rs == null) {
+			ticketno = AccessoryService.generateRandomNumber();
+			query = "SELECT * FROM ticketdetails WHERE ticketno = " + ticketno;
+			rs = dbs.getResultForQuery(query);
+		}
+		String value = (String) jobj.get("trainTime");
+		String values[] = value.split(" ");
+		query = "INSERT INTO ticketdetails VALUES(" + ticketno + ", '"
+				+ jobj.get("selectedFrom") + "', '" + jobj.get("selectedTo")
+				+ "', '" + values[1] + " " + values[2] + "', '"
+				+ jobj.get("journeydate") + "', 'r', 't', '" + jobj.get("nic")
+				+ "', '" + jobj.get("seatNumbers") + "', '"
+				+ jobj.get("selectedClass") + "', '" + values[0] + "', '"
+				+ jobj.get("contactEmail") + "', '" + jobj.get("contactphone")
+				+ "')";
+		dbs.updateQuery(query);
+		jobj.put("ticketno", ticketno);
+		return jobj;
 	}
 }

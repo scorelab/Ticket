@@ -3,6 +3,7 @@ package com.qtkt.ServiceClasses;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,11 +16,13 @@ public class GetFromToTrainTime {
 	private DatabaseService dbs;
 	private ResultSet rs;
 	private JSONArray jarray;
+	private DateFormat dateformat;
 
 	// private JSONObject jobj;
 
 	public GetFromToTrainTime() {
 		dbs = new DatabaseService();
+		dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -128,12 +131,27 @@ public class GetFromToTrainTime {
 				// jarray.add(i, rs.getInt(1));
 				// i++;
 			} else {
-				System.out.println("Not Available");
+				availability = false;
+				//System.out.println("Not Available");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return availability;
+	}
+
+	public float availableDay(String journeydatetime) {// 2014-07-25
+		Date date = new Date();
+		Date jdate = null;
+		String today = dateformat.format(date);
+		try {
+			date = dateformat.parse(today);
+			jdate = dateformat.parse(journeydatetime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		//System.out.println((float)(jdate.getTime() - date.getTime()) / (1000 * 3600 * 24));
+		return (float) ((jdate.getTime() - date.getTime()) / (1000 * 3600 * 24));
 	}
 
 	public void close() {

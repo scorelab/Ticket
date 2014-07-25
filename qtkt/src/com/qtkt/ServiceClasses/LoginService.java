@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.servlet.http.Cookie;
 
 import com.qtkt.ServiceClasses.HelperClasses.DatabaseService;
-
+//comment
 public class LoginService {
 	private DatabaseService dbs;
 	private String query = "";

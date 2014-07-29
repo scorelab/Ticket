@@ -10,19 +10,21 @@ import com.qtkt.ServiceClasses.HelperClasses.AccessoryService;
 import com.qtkt.ServiceClasses.HelperClasses.DatabaseService;
 
 public class ReserveService {
-	private JSONObject jobj;
+	// private JSONObject jobj;
 	private String snos;
 	private DatabaseService dbs;
 	private ResultSet rs;
 	private ResultSetMetaData rsmd;
+	private QrCodeService qrs;
 
 	public ReserveService() {
 		dbs = new DatabaseService();
+		qrs = new QrCodeService();
 	}
 
 	@SuppressWarnings("unchecked")
-	public JSONObject reserveIt(JSONObject cr) {
-		jobj = cr;
+	public JSONObject reserveIt(JSONObject jobj) {
+		// jobj = cr;
 		String value, values[];
 		value = (String) jobj.get("trainTime");
 		values = value.split(" ");
@@ -32,6 +34,7 @@ public class ReserveService {
 
 		jobj.put("seatNumbers", snos);
 		jobj.put("status", 2);
+		// jobj.put("image", qrs.getImage('r', jobj));
 		return updateTicket(jobj);
 	}
 
@@ -90,6 +93,22 @@ public class ReserveService {
 				+ "')";
 		dbs.updateQuery(query);
 		jobj.put("ticketno", ticketno);
+		jobj.put("image", qrs.getImage(getNewJson(jobj)));
 		return jobj;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject getNewJson(JSONObject jobj) {
+		JSONObject njobj = new JSONObject();
+		njobj.put("jd", jobj.get("journeydate")); // Journey Date
+		njobj.put("f", jobj.get("selectedFrom")); // From
+		njobj.put("t", jobj.get("selectedTo")); // To
+		njobj.put("sc",
+				jobj.get("selectedClass") + "_" + jobj.get("seatNumbers")); // Seats
+																			// with
+																			// Class
+		njobj.put("ty", "R"); // type = R(Reserved)|B(Booked)
+
+		return njobj;
 	}
 }

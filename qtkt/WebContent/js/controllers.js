@@ -91,7 +91,7 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 		alert("payment");
 	}
 	$scope.reserve = function() {
-		var r = confirm("Press a button");
+		var r = confirm("Do you really want to reserve..");
 		if (r == true) {
     		$scope.bookcredentials.id="6";
 			$http.post('http://localhost:8080/qtkt/auth/FromGet',$scope.bookcredentials).success(function(data) {
@@ -102,13 +102,13 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 					FormErrorService.displayerror('Sorry Your Reserve Request is Currently Unavilable');
 				} else if ($scope.rcre.status == 2){
 					FormErrorService.clearerror();
+					FormErrorService.displayerror('Ticket Reserved\nRemember This is not a valid Ticket, Pay Money to Make Your Ticket Valid');
 					$scope.next = 3;
 				};
 			}).error(function(data){
 				alert("Server Error "+status);
 			});
 		} else {
-   			x = "You pressed Cancel!";
 		}
 	}
 
@@ -117,13 +117,6 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 	}
 
 	$scope.printdiv = function() {
-		/*
-		$http.get('http://localhost:8080/qtkt/qr').success(function(data) {
-			$scope.im = data;
-		}).error(function(data){
-			alert("Server Error "+status);
-		});
-*/
 		PrintService.print('printthis');
 	}
 	window.onbeforeunload = function() {

@@ -59,6 +59,18 @@ public class DatabaseService {
 		return rs;
 	}
 
+	public ResultSet getResultForTicketQuery(String query, int ticketno) {
+		rs = null;
+		try {
+			ps = con.prepareStatement(query);
+			ps.setInt(1, ticketno);
+			rs = ps.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
 	public void updateQuery(String query) {
 		rs = null;
 		try {

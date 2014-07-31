@@ -102,7 +102,7 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 					FormErrorService.displayerror('Sorry Your Reserve Request is Currently Unavilable');
 				} else if ($scope.rcre.status == 2){
 					FormErrorService.clearerror();
-					FormErrorService.displayerror('Ticket Reserved\nRemember This is not a valid Ticket, Pay Money to Make Your Ticket Valid');
+					FormErrorService.displayerror('Ticket Reserved. Remember This is not a valid Ticket, Pay Money to Make Your Ticket Valid');
 					$scope.next = 3;
 				};
 			}).error(function(data){
@@ -113,7 +113,11 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 	}
 
 	$scope.back = function() {
-		$scope.next = 1;//!$scope.next;
+		var r = confirm("Do you really want to go back..");
+		if(r) {
+			FormErrorService.clearerror();
+			$scope.next = 1;//!$scope.next;
+		}
 	}
 
 	$scope.printdiv = function() {
@@ -124,10 +128,115 @@ app.controller('BookingController', function($scope,$http,getdatemin,FormErrorSe
 	};
 });
 
-app.controller('CancelController', function(){
-	
+app.controller('InquiryController', function($scope,$http,FormErrorService,PrintService){
+	//window.scope = $scope;
+	$scope.next = 1;
+	$scope.tcr = {};
+	$scope.getDetails = function(){
+		if (!$scope.details.$valid) {
+			FormErrorService.displayerror("Invalid Ticket Number");
+		}
+		else {
+			FormErrorService.clearerror();
+			$http.get('http://localhost:8080/qtkt/auth/TicketServlet?ticketno='+$scope.ticketno).success(function(data){
+				$scope.tcr = data;
+				if($scope.tcr.status == 0) {
+					FormErrorService.displayerror('Sorry Requested Ticket Not Found');
+				}
+				else if ($scope.tcr.status == 1) {
+					FormErrorService.clearerror();
+					$scope.next = 2;
+					if ($scope.tcr.valid == "f") {
+						FormErrorService.displayerror("Note: Ticket Expired or Canceled");
+					} else {
+						if ($scope.tcr.btype == "r") {
+							FormErrorService.displayerror("Note: Reserved Ticket")
+						}
+					}
+				}
+			}).error(function(status){
+				alert('Server Error ');
+			});
+		}
+	}
+
+	$scope.printdiv = function() {
+		PrintService.print('printthis');
+	}
+
+	$scope.back = function() {
+		$scope.next = FormErrorService.backme($scope.next);
+	}
 });
 
-app.controller('InquiryController', function(){
-	
+app.controller('CancelController', function($scope,$http,FormErrorService,PrintService){
+	$scope.max = "";
+	$scope.next = 1;
+	$scope.ntcr = {};
+	$scope.ccr = {};
+	window.scope = $scope;
+	$scope.doCancel = function(){
+		if (!$scope.cancel.$valid) {
+			FormErrorService.displayerror("Invalid Ticket Number");
+		}
+		else {
+			FormErrorService.clearerror();
+			$http.get('http://localhost:8080/qtkt/auth/TicketServlet?ticketno='+$scope.ticketno).success(function(data){
+				$scope.ccr = data;
+				if($scope.ccr.status == 0) {
+					FormErrorService.displayerror('Sorry Requested Ticket Not Found');
+				}
+				else if ($scope.ccr.status == 1) {
+					FormErrorService.clearerror();
+					//$scope.next = 2;
+					if ($scope.ccr.valid == "f") {
+						FormErrorService.displayerror("Note: Ticket Expired or Canceled");
+					} else {
+						$scope.allowToCancel();
+					}
+				}
+			}).error(function(status){
+				alert('Server Error ');
+			});
+		}
+	}
+
+	$scope.allowToCancel = function(){
+		$scope.next = 2;
+		$scope.max = $scope.ccr.seats;
+	}
+
+	$scope.sendCancel = function(){
+		if (!$scope.scancel.$valid) {
+			FormErrorService.displayerror("Check No of Canceling Ticket/s");
+		}
+		else {
+			$scope.sccr.status = 0;
+			$scope.sccr.ticketno = $scope.ccr.ticketno;
+			$http.post('http://localhost:8080/qtkt/auth/TicketServlet',$scope.sccr).success(function(data){
+				$scope.ntcr = data;
+				if ($scope.ntcr.status == 0) {
+					FormErrorService.displayerror("Cancelation not Success");
+				}
+				else if($scope.ntcr.status == 1){
+					FormErrorService.clearerror();
+					alert("Ticket Successfully Canceled. Printout the new Ticket");
+					$scope.next = 3;
+				} 
+				else {
+					FormErrorService.displayerror("Something went wrong, Ticket Cancelation Failed");
+				}
+			}).error(function(status){
+				alert('Server Error ');
+			});
+		}
+	}
+
+	$scope.printdiv = function() {
+		PrintService.print('printthis');
+	}
+
+	$scope.back = function() {
+		$scope.next = FormErrorService.backme($scope.next);
+	}
 });

@@ -1,1 +1,116 @@
-<h3>You are now in cancel</h3>
+<div class="row-fluid col-xs-offset-2">
+	<div ng-show="next == 1">
+		<form class="form-horizontal" name="cancel" role="form" ng-submit="doCancel()">
+			<div class="form-group">
+				<label class="col-xs-10 label label-default">Cancellation Panel</label>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-2 label label-info"><h5>Ticket No</h5></label>
+				<div class="col-xs-8">
+					<input type="number" class="form-control" placeholder=" Ticket Number" name="ticketno" min="1" ng-minlength="8" ng-maxlength="8" ng-model="ticketno" required/>
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="col-xs-10 btn btn-large btn-primary" type="submit"><h5>Check Ticket</h5></button>
+			</div>
+		</form>
+	</div>
+	<div ng-show="next == 2">
+		<div class="row">
+			<label class="col-xs-10 label label-default">Cancellation Panel</label>
+		</div>
+		<br>
+		<div class="row">
+			<label class='col-sm-2 label label-info' for="ticketno"><h5>Ticket No</h5></label>
+            <label class='col-sm-2 label label-info' for="ticketno"><h5>{{ccr.ticketno}}</h5></label>
+            
+            <label class="col-sm-offset-2 col-sm-2 label label-info" for="journeydate"><h5>Journey Date</h5></label>
+            <label class="col-sm-2 label label-info" for="journeydate"><h5>{{ccr.journeydate}}</h5></label>
+		</div>
+		<br>
+		<div class="row">
+            <label class='col-sm-2 label label-info' for="class"><h5>Class</h5></label>
+            <label class='col-sm-2 label label-info' for="class"><h5>{{ccr.class}}</h5></label>
+
+            <label class="col-sm-offset-2 col-sm-2 label label-info" for="seats"><h5>Number of Ticket/s</h5></label>
+            <label class="col-sm-2 label label-info" for="seats"><h5>{{ccr.seats}}</h5></label>
+        </div>
+        <br>
+        <form class="form-horizontal" name="scancel" role="form" ng-submit="sendCancel()">
+        	<div class="row">
+				<label class="col-xs-3 label label-info"><h5>No of Canceling Ticket/s</h5></label>
+				<div class="col-xs-2">
+					<input type="number" class="form-control" name="cticketno" min="1" max="{{max}}" ng-model="sccr.cticketno" required/>
+				</div>
+				<button class="col-xs-offset-2 col-xs-3 btn btn-large btn-primary" type="submit">Cancel Ticket/s</button>
+        	</div>
+        	<br>
+        	<div class="row">
+        		<button class="col-sm-2 btn btn-large btn-danger" ng-click="back()">Back</button>
+        	</div>
+        	<!--
+			<div class="form-group">
+				
+			</div>
+		-->
+		</form>
+	</div>
+	<div ng-show="next == 3" >
+		<div class="row">
+			<label class="col-xs-10 label label-default">Cancellation Panel</label>
+		</div>
+		<div id='printthis' class="row col-xs-10">
+            <br>
+            <table class="table table-striped">
+                <caption>Ticket Details</caption>
+                <tr>
+                    <td>Tkt-No</td>
+                    <td>{{ntcr.ticketno}}</td>
+
+                    <td>Journey Date</td>
+                    <td>{{ntcr.journeydate}}</td>
+                </tr>
+                <tr>
+                    <td>Nic</td>
+                    <td>{{ntcr.nic}}</td>
+
+                    <td>Train and Time</td>
+                    <td>{{ntcr.train}}</td>
+                </tr>
+                <tr>
+                    <td>From</td>
+                    <td>{{ntcr.selectedFrom}}</td>
+
+                    <td>Destination</td>
+                    <td>{{ntcr.selectedTo}}</td>
+                </tr>
+                <tr>
+                    <td>Seat Numbers</td>
+                    <td>{{ntcr.seatno}}</td>
+
+                    <td>Class</td>
+                    <td>{{ntcr.class}}</td>
+                </tr>
+                <tr>
+                    <td align = "center" colspan = "4">
+                        <img ng-src="{{ntcr.image}}">
+                    </td>
+                </tr>
+            </table>
+        <!--<p>Seat Numbers: {{rcre.seatNumbers}}</p>-->
+        </div>
+        <div class="row">
+	        <table class="table table-striped">
+	        	<tr>
+	                <td>Phone Number</td>
+	                <td>{{ntcr.phoneno}}</td>
+
+	                <td>E-Mail ID</td>
+	                <td>{{ntcr.emailid}}</td>
+	            </tr>
+	        </table>
+	        <button class="col-sm-2 btn btn-large btn-danger" ng-click="back()">Back</button>
+            <button class="col-xs-offset-6 col-sm-2 btn btn-large btn-primary" ng-click="printdiv()">Print</button>
+	    </div>
+	</div>
+</div>

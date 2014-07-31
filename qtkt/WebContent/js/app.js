@@ -136,6 +136,16 @@ app.factory('FormErrorService', function(FlashService){
 		},
 		clearerror: function() {
 			FlashService.clear();
+		},
+		backme: function(next) {
+			var r = confirm("Do you really want to go back..");
+			if(r) {
+				FlashService.clear();
+				return next-1;
+			}
+			else {
+				return next;
+			}
 		}
 	};
 });
@@ -145,7 +155,6 @@ app.factory('PrintService', function(){
 		print: function(div) {
 			var printContents = document.getElementById(div).innerHTML;
 			var originalContent = document.body.innerHTML;
-			
 			document.body.innerHTML = printContents;
 			window.print();
 			document.body.innerHTML = originalContent;

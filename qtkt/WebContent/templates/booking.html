@@ -14,7 +14,7 @@
 
                 <div class="col-sm-3 right-inner-addon">
                     <!--<span><b>V</b></span>-->
-                    <input type="text" class="form-control" placeholder='National ID Number' name="nic"ng-minlength="10" ng-maxlength="10" ng-model="bookcredentials.nic" required />
+                    <input type="text" class="form-control" placeholder='National ID Number' name="nic" ng-minlength="10" ng-maxlength="10" ng-model="bookcredentials.nic" required />
                 </div>
             </div>
             <br>
@@ -156,6 +156,11 @@
 
                 <button class="col-sm-offset-2 col-sm-2 btn btn-large btn-primary" type="submit" >Book</button>
             </div>
+            <br>
+            <div class="row">
+                <label class='col-sm-2 label label-info' for="ticketprice"><h5>Price</h5></label>
+                <label class='col-sm-3 label label-info' for="ticketprice"><h5>{{}}</h5></label>
+            </div>
             <!--                           
             <div class='form-group'>
                 <button class="col-xs-3 btn btn-large btn-danger">Back</button>
@@ -212,7 +217,8 @@
         <!--<p>Seat Numbers: {{rcre.seatNumbers}}</p>-->
         </div>
         <div class="row">
-            <button class="col-sm-2 btn btn-large btn-primary" ng-click="printdiv()">Print</button>
+            <button class="col-sm-2 btn btn-large btn-danger" ng-click="back()">Back</button>
+            <button class="col-xs-offset-7 col-sm-2 btn btn-large btn-primary" ng-click="printdiv()">Print</button>
         </div>
     </div>
 </div>

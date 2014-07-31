@@ -73,6 +73,7 @@ public class ReserveService {
 	@SuppressWarnings("unchecked")
 	private JSONObject updateTicket(JSONObject jobj) {
 		int ticketno = AccessoryService.generateRandomNumber();
+		String imdata;
 		String query = "SELECT * FROM ticketdetails WHERE ticketno = "
 				+ ticketno;
 		rs = dbs.getResultForQuery(query);
@@ -90,10 +91,14 @@ public class ReserveService {
 				+ "', '" + jobj.get("seatNumbers") + "', '"
 				+ jobj.get("selectedClass") + "', '" + values[0] + "', '"
 				+ jobj.get("contactEmail") + "', '" + jobj.get("contactphone")
-				+ "')";
+				+ "',''," + jobj.get("seats") + ")";
 		dbs.updateQuery(query);
 		jobj.put("ticketno", ticketno);
-		jobj.put("image", qrs.getImage(getNewJson(jobj)));
+		imdata = qrs.getImage(getNewJson(jobj));
+		jobj.put("image", imdata);
+		query = "UPDATE ticketdetails SET image='" + imdata
+				+ "' WHERE ticketno='" + ticketno + "'";
+		dbs.updateQuery(query);
 		return jobj;
 	}
 
